@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import javax.swing.JFrame;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 
@@ -363,6 +365,11 @@ public class RegisterForm extends javax.swing.JFrame {
             
             
             String PNum=phoneNumber.getText();
+            if(userCheck(PNum)){
+                JOptionPane.showMessageDialog(null, "User already exist.");
+            }
+            
+            
             if(phoneValidation(PNum)){
                 pst.setString(1,PNum);
             }
@@ -552,5 +559,25 @@ public class RegisterForm extends javax.swing.JFrame {
            java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
            java.util.regex.Matcher m = p.matcher(Pass);
            return m.matches();
+    }
+    
+    public boolean userCheck (String phone){
+        boolean checkUser=false;
+        String query="SELECT * FROM `user` WHERE `Phone` =?";
+        
+         try {
+             con=DriverManager.getConnection("jdbc:mysql://localhost/ewallet","root","");
+             pst = con.prepareStatement(query);
+             pst.setString(1, phone);
+             rs=pst.executeQuery();
+             
+             if(rs.next()){
+                 checkUser=true;
+             }
+             
+         } catch (SQLException ex) {
+             Logger.getLogger(RegisterForm.class.getName()).log(Level.SEVERE, null, ex);
+         }
+            return checkUser;
     }
 }
