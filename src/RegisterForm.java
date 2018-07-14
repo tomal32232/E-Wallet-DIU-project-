@@ -1,6 +1,13 @@
 
 import java.awt.Color;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import javax.swing.JFrame;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import javax.swing.JOptionPane;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -14,9 +21,12 @@ import javax.swing.JFrame;
  */
 public class RegisterForm extends javax.swing.JFrame {
 
-    /**
-     * Creates new form RegisterForm
-     */
+     Connection con=null;
+     PreparedStatement pst=null;
+     ResultSet rs=null;
+     
+     
+     
     public RegisterForm() {
         initComponents();
     }
@@ -35,21 +45,21 @@ public class RegisterForm extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         phoneNumber = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        jButton_signup = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
-        phoneNumber1 = new javax.swing.JTextField();
+        firstName = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        phoneNumber2 = new javax.swing.JTextField();
+        lastName = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        phoneNumber3 = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
-        jDateChooser1 = new com.toedter.calendar.JDateChooser();
+        dateOfBirth = new com.toedter.calendar.JDateChooser();
         jPanel3 = new javax.swing.JPanel();
-        phoneNumber4 = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
-        phoneNumber5 = new javax.swing.JTextField();
+        eMail = new javax.swing.JTextField();
+        passWord = new javax.swing.JPasswordField();
+        passWord2 = new javax.swing.JPasswordField();
         jLabel1 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
@@ -78,12 +88,12 @@ public class RegisterForm extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setBackground(new java.awt.Color(218, 8, 81));
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Signup");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jButton_signup.setBackground(new java.awt.Color(218, 8, 81));
+        jButton_signup.setForeground(new java.awt.Color(255, 255, 255));
+        jButton_signup.setText("Signup");
+        jButton_signup.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jButton_signupActionPerformed(evt);
             }
         });
 
@@ -96,11 +106,11 @@ public class RegisterForm extends javax.swing.JFrame {
             }
         });
 
-        phoneNumber1.setBackground(new java.awt.Color(95, 95, 95));
-        phoneNumber1.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        phoneNumber1.addActionListener(new java.awt.event.ActionListener() {
+        firstName.setBackground(new java.awt.Color(95, 95, 95));
+        firstName.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        firstName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                phoneNumber1ActionPerformed(evt);
+                firstNameActionPerformed(evt);
             }
         });
 
@@ -108,25 +118,17 @@ public class RegisterForm extends javax.swing.JFrame {
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("First Name :");
 
-        phoneNumber2.setBackground(new java.awt.Color(95, 95, 95));
-        phoneNumber2.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        phoneNumber2.addActionListener(new java.awt.event.ActionListener() {
+        lastName.setBackground(new java.awt.Color(95, 95, 95));
+        lastName.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        lastName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                phoneNumber2ActionPerformed(evt);
+                lastNameActionPerformed(evt);
             }
         });
 
         jLabel8.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Last Name :");
-
-        phoneNumber3.setBackground(new java.awt.Color(95, 95, 95));
-        phoneNumber3.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        phoneNumber3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                phoneNumber3ActionPerformed(evt);
-            }
-        });
 
         jLabel9.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
@@ -136,8 +138,8 @@ public class RegisterForm extends javax.swing.JFrame {
         jLabel10.setForeground(new java.awt.Color(255, 255, 255));
         jLabel10.setText("Date of Birth :");
 
-        jDateChooser1.setBackground(new java.awt.Color(95, 95, 95));
-        jDateChooser1.setForeground(new java.awt.Color(187, 187, 190));
+        dateOfBirth.setBackground(new java.awt.Color(95, 95, 95));
+        dateOfBirth.setForeground(new java.awt.Color(187, 187, 190));
 
         jPanel3.setBackground(new java.awt.Color(26, 26, 28));
 
@@ -152,14 +154,6 @@ public class RegisterForm extends javax.swing.JFrame {
             .addGap(0, 40, Short.MAX_VALUE)
         );
 
-        phoneNumber4.setBackground(new java.awt.Color(95, 95, 95));
-        phoneNumber4.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        phoneNumber4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                phoneNumber4ActionPerformed(evt);
-            }
-        });
-
         jLabel11.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         jLabel11.setForeground(new java.awt.Color(255, 255, 255));
         jLabel11.setText("Confirm Password :");
@@ -168,11 +162,17 @@ public class RegisterForm extends javax.swing.JFrame {
         jLabel12.setForeground(new java.awt.Color(255, 255, 255));
         jLabel12.setText("Email :");
 
-        phoneNumber5.setBackground(new java.awt.Color(95, 95, 95));
-        phoneNumber5.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        phoneNumber5.addActionListener(new java.awt.event.ActionListener() {
+        eMail.setBackground(new java.awt.Color(95, 95, 95));
+        eMail.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        eMail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                phoneNumber5ActionPerformed(evt);
+                eMailActionPerformed(evt);
+            }
+        });
+
+        passWord.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                passWordActionPerformed(evt);
             }
         });
 
@@ -190,7 +190,7 @@ public class RegisterForm extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addGap(42, 42, 42)
-                        .addComponent(jButton1))
+                        .addComponent(jButton_signup))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addGap(18, 18, 18)
@@ -198,27 +198,27 @@ public class RegisterForm extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addGap(18, 18, 18)
-                        .addComponent(phoneNumber1, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(firstName, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel8)
                         .addGap(18, 18, 18)
-                        .addComponent(phoneNumber2, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(lastName, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel9)
-                        .addGap(18, 18, 18)
-                        .addComponent(phoneNumber3, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel11)
-                        .addGap(18, 18, 18)
-                        .addComponent(phoneNumber4, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(39, 39, 39)
+                        .addComponent(passWord, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel12))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(phoneNumber5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jDateChooser1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(eMail, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(dateOfBirth, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel11)
+                        .addGap(39, 39, 39)
+                        .addComponent(passWord2, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -240,40 +240,40 @@ public class RegisterForm extends javax.swing.JFrame {
                         .addComponent(jLabel4))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(phoneNumber1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(firstName, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(jLabel8))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(phoneNumber2, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(lastName, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(jLabel12))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(phoneNumber5, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(eMail, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel10)
-                    .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(dateOfBirth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(jLabel9))
-                    .addComponent(phoneNumber3, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(passWord)
+                        .addGap(18, 18, 18)
+                        .addComponent(passWord2)
+                        .addGap(63, 63, 63))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(jLabel11))
-                    .addComponent(phoneNumber4, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(30, 30, 30)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel9)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel11)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton_signup, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 76, Short.MAX_VALUE)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -349,9 +349,33 @@ public class RegisterForm extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_phoneNumberActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void jButton_signupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_signupActionPerformed
+       
+        
+        
+        try{
+            String query = "INSERT INTO `user`"
+                    + "(`Phone`, `f_name`, `l_name`, `email`, `dob`, `pass`, `c_pass`)"
+                    + "VALUES (?,?,?,?,?,?,?)";
+            con=DriverManager.getConnection("jdbc:mysql://localhost/ewallet","root","");
+            pst = con.prepareStatement(query);
+            pst.setString(1,phoneNumber.getText());
+            pst.setString(2,firstName.getText());
+            pst.setString(3,lastName.getText());
+            pst.setString(4,eMail.getText());
+            SimpleDateFormat sdf=new SimpleDateFormat("dd-mm-yyyy");
+            String date = sdf.format(dateOfBirth.getDate());
+            pst.setString(5, date);
+            pst.setString(6,String.valueOf(passWord.getPassword()));
+            pst.setString(7,String.valueOf(passWord2.getPassword()));
+            pst.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Success");
+           
+            
+        }catch (SQLException ex){
+            JOptionPane.showMessageDialog(null, ex+"tttttttttttt");
+        }
+    }//GEN-LAST:event_jButton_signupActionPerformed
 
     private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
         LoginForm LF=new LoginForm();
@@ -375,25 +399,21 @@ public class RegisterForm extends javax.swing.JFrame {
         this.setState(JFrame.ICONIFIED);
     }//GEN-LAST:event_jLabel7MouseClicked
 
-    private void phoneNumber1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_phoneNumber1ActionPerformed
+    private void firstNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_firstNameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_phoneNumber1ActionPerformed
+    }//GEN-LAST:event_firstNameActionPerformed
 
-    private void phoneNumber2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_phoneNumber2ActionPerformed
+    private void lastNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lastNameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_phoneNumber2ActionPerformed
+    }//GEN-LAST:event_lastNameActionPerformed
 
-    private void phoneNumber3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_phoneNumber3ActionPerformed
+    private void eMailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eMailActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_phoneNumber3ActionPerformed
+    }//GEN-LAST:event_eMailActionPerformed
 
-    private void phoneNumber4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_phoneNumber4ActionPerformed
+    private void passWordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passWordActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_phoneNumber4ActionPerformed
-
-    private void phoneNumber5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_phoneNumber5ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_phoneNumber5ActionPerformed
+    }//GEN-LAST:event_passWordActionPerformed
 
     /**
      * @param args the command line arguments
@@ -431,8 +451,10 @@ public class RegisterForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private com.toedter.calendar.JDateChooser jDateChooser1;
+    private com.toedter.calendar.JDateChooser dateOfBirth;
+    private javax.swing.JTextField eMail;
+    private javax.swing.JTextField firstName;
+    private javax.swing.JButton jButton_signup;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -448,11 +470,9 @@ public class RegisterForm extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JTextField lastName;
+    private javax.swing.JPasswordField passWord;
+    private javax.swing.JPasswordField passWord2;
     private javax.swing.JTextField phoneNumber;
-    private javax.swing.JTextField phoneNumber1;
-    private javax.swing.JTextField phoneNumber2;
-    private javax.swing.JTextField phoneNumber3;
-    private javax.swing.JTextField phoneNumber4;
-    private javax.swing.JTextField phoneNumber5;
     // End of variables declaration//GEN-END:variables
 }
