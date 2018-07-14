@@ -356,8 +356,8 @@ public class RegisterForm extends javax.swing.JFrame {
         
         try{
             String query = "INSERT INTO `user`"
-                    + "(`Phone`, `f_name`, `l_name`, `email`, `dob`, `pass`, `c_pass`)"
-                    + "VALUES (?,?,?,?,?,?,?)";
+                    + "(`Phone`, `f_name`, `l_name`, `email`, `dob`, `pass`)"
+                    + "VALUES (?,?,?,?,?,?)";
             con=DriverManager.getConnection("jdbc:mysql://localhost/ewallet","root","");
             pst = con.prepareStatement(query);
             
@@ -400,10 +400,32 @@ public class RegisterForm extends javax.swing.JFrame {
             SimpleDateFormat sdf=new SimpleDateFormat("dd-MM-yyyy");
             String date = sdf.format(dateOfBirth.getDate());
             pst.setString(5, date);
-            pst.setString(6,String.valueOf(passWord.getPassword()));
-            pst.setString(7,String.valueOf(passWord2.getPassword()));
-            pst.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Success");
+            
+            
+            String Pass=String.valueOf(passWord.getPassword());
+            String Pass2=String.valueOf(passWord2.getPassword());
+            if(Pass.equals(Pass2)){
+                if(passValidation(Pass)){
+                pst.setString(6,Pass);
+                }
+                else{
+                JOptionPane.showMessageDialog(null, "Password must contain capital letter,small letter,number and symbol."
+                        + "Do not use space");
+            }
+            
+              pst.executeUpdate();  
+              JOptionPane.showMessageDialog(null, "Success");
+            
+            
+            
+            }
+            
+            
+            else{
+                JOptionPane.showMessageDialog(null, "Password mismatch");
+            }
+            
+            
            
             
         }catch (SQLException ex){
@@ -524,4 +546,11 @@ public class RegisterForm extends javax.swing.JFrame {
            java.util.regex.Matcher m = p.matcher(email);
            return m.matches();
      }
+
+    private boolean passValidation(String Pass) {
+           String ePattern = "\\A(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}\\z";
+           java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
+           java.util.regex.Matcher m = p.matcher(Pass);
+           return m.matches();
+    }
 }
