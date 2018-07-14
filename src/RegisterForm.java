@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import javax.swing.JFrame;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 
 /*
@@ -359,11 +360,44 @@ public class RegisterForm extends javax.swing.JFrame {
                     + "VALUES (?,?,?,?,?,?,?)";
             con=DriverManager.getConnection("jdbc:mysql://localhost/ewallet","root","");
             pst = con.prepareStatement(query);
-            pst.setString(1,phoneNumber.getText());
-            pst.setString(2,firstName.getText());
-            pst.setString(3,lastName.getText());
-            pst.setString(4,eMail.getText());
-            SimpleDateFormat sdf=new SimpleDateFormat("dd-mm-yyyy");
+            
+            
+            String PNum=phoneNumber.getText();
+            if(phoneValidation(PNum)){
+                pst.setString(1,PNum);
+            }
+            else{
+                JOptionPane.showMessageDialog(null, "Invalid Phone number."
+                        + "Phone number format: 01731237218");
+            }
+            
+       
+            String FName=firstName.getText();
+            if(fnameValidation(FName)){
+                pst.setString(2,FName);
+            }
+            else{
+                JOptionPane.showMessageDialog(null, "First name Invalid");
+            }
+             
+            String LName=lastName.getText();
+            if(fnameValidation(LName)){
+                pst.setString(3,LName);
+            }
+            else{
+                JOptionPane.showMessageDialog(null, "Last name Invalid");
+            }
+            
+            
+            String EMail=eMail.getText();
+            if(emailValidation(EMail)){
+                pst.setString(4,EMail);
+            }
+            else{
+                JOptionPane.showMessageDialog(null, "Email Invalid");
+            }
+            
+            SimpleDateFormat sdf=new SimpleDateFormat("dd-MM-yyyy");
             String date = sdf.format(dateOfBirth.getDate());
             pst.setString(5, date);
             pst.setString(6,String.valueOf(passWord.getPassword()));
@@ -475,4 +509,19 @@ public class RegisterForm extends javax.swing.JFrame {
     private javax.swing.JPasswordField passWord2;
     private javax.swing.JTextField phoneNumber;
     // End of variables declaration//GEN-END:variables
+
+    private boolean phoneValidation(String in) {
+       return in.charAt(0) == '0' && in.charAt(1) == '1' && in.length() == 11 && in.matches ("[0-9]+");
+    }
+
+    private boolean fnameValidation(String in) {
+        return Pattern.matches("[a-zA-Z]+", in);
+    }
+    
+     public boolean emailValidation(String email) {
+           String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
+           java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
+           java.util.regex.Matcher m = p.matcher(email);
+           return m.matches();
+     }
 }
